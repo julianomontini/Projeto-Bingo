@@ -46,6 +46,16 @@ public class TelaLogin{
 		botaoCadastro.setText("Cadastrar");
 		botaoCancelar.setText("Cancelar");
 
+		botaoCancelar.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				
+				primaryStage.close();
+				
+			}
+		});
+		
 		//Define comportamento quando o botao de login for clicado
 		botaoLogin.setOnMouseClicked(new EventHandler<Event>() {
 			@Override

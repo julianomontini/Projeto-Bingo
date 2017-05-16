@@ -42,6 +42,15 @@ public class TelaCadastro {
 		botaoCancelar.setText("Cancelar");
 		botaoConfirmar.setText("Confirmar");
 		
+		botaoCancelar.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				primaryStage.setScene(TelaLogin.getTela(primaryStage));
+				primaryStage.show();	
+			}
+		});
+		
 		botaoConfirmar.setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
@@ -71,6 +80,9 @@ public class TelaCadastro {
 					UsuarioBO usuario = new UsuarioBO(null, inputNome.getText(), inputEmail.getText(), inputSenha.getText());
 					
 					mgrUsuario.create(usuario);
+					
+					primaryStage.setScene(TelaLogin.getTela(primaryStage));
+					primaryStage.show();
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
