@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 
 public class Listener extends Thread{
-	final ReceberEscrever acoes;
+	final Receber acoes;
 	final InputStream is;
 	
-	public Listener(InputStream is, ReceberEscrever acoes){
+	public Listener(InputStream is, Receber acoes){
 		this.acoes = acoes;
 		this.is = is;
 		this.start();
@@ -19,7 +19,7 @@ public class Listener extends Thread{
 		try {
 			ObjectInputStream ois = new ObjectInputStream(this.is);
 			while(true){
-				System.out.println(ois.readObject().toString());
+				acoes.receber(ois.readObject());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

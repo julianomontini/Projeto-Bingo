@@ -1,6 +1,6 @@
 package com.servidor;
 
-public class TesteServidor {
+public class StartServidor {
 
 	public static void main(String[] args) {
 		

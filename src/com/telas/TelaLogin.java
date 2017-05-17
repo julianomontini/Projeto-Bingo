@@ -5,6 +5,7 @@ import java.util.List;
 import com.database.Conexao;
 import com.database.DAOS.UsuariosDAO;
 import com.database.DBOS.UsuarioBO;
+import com.jogo.Jogo;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -68,6 +69,8 @@ public class TelaLogin{
 					//Se o tamanho da lista for 0 significa que a query não retornou resultados
 					if (usuarios.size() == 0)
 						throw new Exception("Esse usuario nao existe");
+					
+					new Jogo(usuarios.get(0).getEmail(), primaryStage);
 
 				} catch (Exception e) {
 					e.printStackTrace();

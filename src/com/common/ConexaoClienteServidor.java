@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public abstract class ConexaoClienteServidor implements ReceberEscrever{
+public abstract class ConexaoClienteServidor implements Receber{
 
 	private Socket conexao;
 	private ObjectOutputStream escreverObjetos;

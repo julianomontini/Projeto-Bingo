@@ -1,12 +1,10 @@
-package com.cliente;
+package com.telas;
 	
-import com.telas.TelaLogin;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 
-public class Cliente extends Application {
+public class ProgramaCliente extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {

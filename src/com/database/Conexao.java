@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class Conexao {
+	
+	private Conexao(){}
 
 	private static Connection conexao = null;
 	

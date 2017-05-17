@@ -5,7 +5,8 @@ import java.net.Socket;
 
 import com.common.ConexaoClienteServidor;
 
-public class TesteCliente {
+
+public class StartCliente {
 
 	public static void main(String[] args) {
 		
@@ -14,26 +15,13 @@ public class TesteCliente {
 
 				@Override
 				public void receber(Object o) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void escrever() {
-					while(true){
-						try {
-							this.getEscreverObjetos().writeObject("Cliente escrevendo");
-							this.getEscreverObjetos().flush();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+					if(o instanceof Integer[]){
+						Integer[] recebido = (Integer[])o;
+						for(Integer i : recebido)
+							System.out.println(i);
 					}
-					
 				}
-				
 			};
-			
-			c1.escrever();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
