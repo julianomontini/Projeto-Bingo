@@ -1,4 +1,4 @@
-package com.jogo;
+package com.jogo.objetosConexao;
 
 import java.io.Serializable;
 

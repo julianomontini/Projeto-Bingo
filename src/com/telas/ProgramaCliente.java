@@ -1,5 +1,10 @@
 package com.telas;
 	
+import java.util.Calendar;
+import java.util.Date;
+
+import com.jogo.Bingo;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 

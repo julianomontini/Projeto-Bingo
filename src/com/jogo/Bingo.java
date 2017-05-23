@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.jogo.objetosConexao.Cartela;
+
 public class Bingo {
 
 	public static Cartela geraCartela(){

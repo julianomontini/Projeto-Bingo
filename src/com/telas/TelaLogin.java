@@ -101,7 +101,11 @@ public class TelaLogin{
 		root.add(mensagens, 1, 4);
 
 		//retorna cena com todos os elementos criados
-		return new Scene(root, 400, 250);
+		Scene c = new Scene(root, 400, 250);
+		c.getStylesheets().add("style.css");
+		
+		
+		return c;
 	}
 
 }
