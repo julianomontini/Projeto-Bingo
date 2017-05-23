@@ -1,6 +1,5 @@
 package com.telas;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,27 +7,25 @@ import com.common.ConexaoClienteServidor;
 import com.jogo.Bingo;
 import com.jogo.objetosConexao.Cartela;
 
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
 
-public class TelaPrincipal {
+public class TelaPrincipal{
 	
 	private List<Integer> numerosEscolhidos;
 	private Scene tela;
 	private Stage primaryStage;
 	private ConexaoClienteServidor conexao;
+	private Label mensagens;
 	public TelaPrincipal(Stage primaryStage, Cartela c, ConexaoClienteServidor conexao){
 		this.numerosEscolhidos = new ArrayList<Integer>();
 		this.conexao = conexao;
@@ -100,6 +97,7 @@ public class TelaPrincipal {
 		Label mensagens = new Label();
 		mensagens.setText("Alguma mensagem aqui");
 		mensagens.setStyle("-fx-font-size: 25px");
+		this.mensagens = mensagens;
 		tabuleiro.addRow(6, mensagens);
 		root.setBottom(mensagens);
 		root.getBottom().setTranslateX(125);
@@ -148,6 +146,17 @@ public class TelaPrincipal {
 
 	public void setPrimaryStage(Stage primaryStage) {
 		this.primaryStage = primaryStage;
+	}
+
+	public void escreverMensagem(String texto){
+		Platform.runLater(new Runnable(){
+			@Override
+			public void run() {
+				TelaPrincipal.this.mensagens.setText(texto);
+				
+			}
+			
+		});
 	}
 	
 }

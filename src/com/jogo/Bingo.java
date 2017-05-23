@@ -2,7 +2,6 @@ package com.jogo;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import com.jogo.objetosConexao.Cartela;
 
@@ -14,7 +13,7 @@ public class Bingo {
 		Integer[] retorno = new Integer[24];
 		
 		while(numerosSorteados.size() <= 24){
-			int numero = ((int)(Math.random()*100))+1;
+			int numero = ((int)(Math.random()*60))+1;
 			if(!numerosSorteados.contains(numero)){
 				numerosSorteados.add(numero);
 			}

@@ -2,11 +2,14 @@ package com.telas;
 
 import java.util.List;
 
+import com.common.Receber;
 import com.database.Conexao;
 import com.database.DAOS.UsuariosDAO;
 import com.database.DBOS.UsuarioBO;
 import com.jogo.Jogo;
+import com.jogo.objetosConexao.Mensagem;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -17,13 +20,22 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class TelaLogin{
+public class TelaLogin implements Receber{
 	
-	//Criado construtor privado, pois todos os metodos dessa classe serao estaticos, portanto, 
-	//nao faz sentido ter uma instancia dela
-	private TelaLogin(){}
+	private Scene cena;
+	private Label mensagens;
+	
+	public TelaLogin(Stage primaryStage){
+		this.cena = setup(primaryStage);
+	}
+	
+	
 
-	public static Scene getTela(Stage primaryStage) {
+	public Scene getCena() {
+		return cena;
+	}
+
+	private Scene setup(Stage primaryStage) {
 		
 		//Cria tela do tipo Grid
 		GridPane root = new GridPane();
@@ -68,9 +80,11 @@ public class TelaLogin{
 					
 					//Se o tamanho da lista for 0 significa que a query não retornou resultados
 					if (usuarios.size() == 0)
-						throw new Exception("Esse usuario nao existe");
+						TelaLogin.this.mensagens.setText("Esse Usuario Nao Existe");
 					
-					new Jogo(usuarios.get(0).getEmail(), primaryStage);
+					new Jogo(usuarios.get(0).getEmail(), primaryStage, TelaLogin.this);
+					
+					TelaLogin.this.mensagens.setText("Jogo comecara em breve, aguarde");
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -99,6 +113,7 @@ public class TelaLogin{
 		root.add(botaoCancelar, 1, 2);
 		root.add(botaoCadastro, 0, 3);
 		root.add(mensagens, 1, 4);
+		this.mensagens = mensagens;
 
 		//retorna cena com todos os elementos criados
 		Scene c = new Scene(root, 400, 250);
@@ -106,6 +121,22 @@ public class TelaLogin{
 		
 		
 		return c;
+	}
+
+
+
+	@Override
+	public void receber(Object o) {
+		if(o instanceof Mensagem){
+			Platform.runLater(new Runnable(){
+				@Override
+				public void run() {
+					TelaLogin.this.mensagens.setText("Mensagem: " + ((Mensagem)o).getTexto());
+				}
+				
+			});
+		}
+		
 	}
 
 }

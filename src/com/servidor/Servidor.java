@@ -1,21 +1,18 @@
 package com.servidor;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.common.ConexaoClienteServidor;
 import com.jogo.Bingo;
-import com.jogo.objetosConexao.JogoDisponivel;
+import com.jogo.objetosConexao.Mensagem;
 import com.jogo.objetosConexao.NumeroSorteado;
 
 public class Servidor extends Thread{
@@ -48,13 +45,12 @@ public class Servidor extends Thread{
 					}
 					
 				};
-				conexoesAbertas.add(c);
 				
 				if(jogoEmAndamento)
-					c.getEscreverObjetos().writeObject(new JogoDisponivel(false));
+					c.getEscreverObjetos().writeObject(new Mensagem("Jogo indisponivel, volte mais tarde"));
 				else{
+					conexoesAbertas.add(c);
 					if(!jogadorConectado){
-						Timer t = new Timer();
 						jogadorConectado = true;
 						timer.schedule(new TimerTask() {
 							
@@ -107,7 +103,7 @@ public class Servidor extends Thread{
 		
 		List<Integer> numerosSorteados = new ArrayList<Integer>();
 		
-		for(int i = 1; i < 101; i++){
+		for(int i = 1; i < 62; i++){
 			numerosSorteados.add(i);
 		}
 		
@@ -120,9 +116,21 @@ public class Servidor extends Thread{
 				if(!numerosSorteados.isEmpty()){
 					Servidor.this.writeToAll(new NumeroSorteado(numerosSorteados.get(0)));
 					numerosSorteados.remove(0);
+				}else{
+					Servidor.this.writeToAll(new Mensagem("Fim do jogo - Nao ha ganhador"));
+					Servidor.this.jogoEmAndamento = false;
+					new Timer().schedule(new TimerTask() {
+						
+						@Override
+						public void run() {
+							iniciaPartida();
+							
+						}
+					}, 10000);;
+					this.cancel();
 				}
 				
 			}
-		}, 5000, 5000);
+		}, 1000, 1000);
 	}
 }

@@ -1,13 +1,11 @@
 package com.jogo;
 
-import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import com.common.ConexaoClienteServidor;
-import com.database.Conexao;
+import com.common.Receber;
 import com.jogo.objetosConexao.Cartela;
-import com.jogo.objetosConexao.JogoDisponivel;
+import com.jogo.objetosConexao.Mensagem;
 import com.jogo.objetosConexao.NumeroSorteado;
 import com.telas.TelaPrincipal;
 
@@ -19,11 +17,14 @@ public class Jogo {
 	private String nomeJogador;
 	private Stage primaryStage;
 	private ConexaoClienteServidor conexao;
+	private TelaPrincipal telaPrincipal = null;
+	private Receber chamante;
 	
-	public Jogo(String nomeJogador, Stage primaryStage){
+	public Jogo(String nomeJogador, Stage primaryStage, Receber chamante){
 		
 		this.nomeJogador = nomeJogador;
 		this.primaryStage = primaryStage;
+		this.chamante = chamante;
 		iniciaConexao();
 		
 	}
@@ -47,10 +48,16 @@ public class Jogo {
 	private void mapaAcoes(Object o){
 		if(o instanceof Cartela)
 			iniciaNovoJogo((Cartela)o);
-		if(o instanceof JogoDisponivel)
-			exibeMensagemEsperar();
 		if(o instanceof NumeroSorteado)
-			System.out.println("Numero sorteado: " + ((NumeroSorteado) o).getNumero());
+			this.telaPrincipal.escreverMensagem("Numero Sorteado: " + ((NumeroSorteado)o).getNumero());
+		if(o instanceof Mensagem){
+			Mensagem m = (Mensagem)o;
+			if(m.getTexto().equals("Jogo indisponivel, volte mais tarde")){
+				this.chamante.receber(m);
+			}else{
+				this.telaPrincipal.escreverMensagem("Mensagem: " + ((Mensagem)o).getTexto());
+			}
+		}
 	}
 	
 	private void iniciaNovoJogo(Cartela c){
@@ -59,14 +66,10 @@ public class Jogo {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				new TelaPrincipal(Jogo.this.primaryStage, c, Jogo.this.conexao);
+				Jogo.this.telaPrincipal = new TelaPrincipal(Jogo.this.primaryStage, c, Jogo.this.conexao);
 				
 			}
 		});
-	}
-	
-	private void exibeMensagemEsperar(){
-		
 	}
 	
 }

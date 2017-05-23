@@ -8,8 +8,6 @@ import com.database.DBOS.UsuarioBO;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -48,7 +46,7 @@ public class TelaCadastro {
 
 			@Override
 			public void handle(Event event) {
-				primaryStage.setScene(TelaLogin.getTela(primaryStage));
+				primaryStage.setScene(new TelaLogin(primaryStage).getCena());
 				primaryStage.show();	
 			}
 		});
@@ -83,7 +81,7 @@ public class TelaCadastro {
 					
 					mgrUsuario.create(usuario);
 					
-					primaryStage.setScene(TelaLogin.getTela(primaryStage));
+					primaryStage.setScene(new TelaLogin(primaryStage).getCena());
 					primaryStage.show();
 					
 				} catch (Exception e) {
