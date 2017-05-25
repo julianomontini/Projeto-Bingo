@@ -11,17 +11,19 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.common.ConexaoClienteServidor;
+import com.common.Receber;
 import com.jogo.Bingo;
 import com.jogo.objetosConexao.Mensagem;
 import com.jogo.objetosConexao.NumeroSorteado;
 
-public class Servidor extends Thread{
+public class Servidor extends Thread implements Receber{
 
 	int porta;
 	boolean jogoEmAndamento = false;
 	boolean jogadorConectado = false;
 	List<ConexaoClienteServidor> conexoesAbertas = new ArrayList<ConexaoClienteServidor>();
-	Timer timer = new Timer();
+	List<Integer> numerosSorteados = new ArrayList<Integer>();
+	Timer timerSorteios;
 	
 	public Servidor(int porta){
 		this.porta = porta;
@@ -37,26 +39,21 @@ public class Servidor extends Thread{
 				Socket conexao = servidor.accept();
 				conexao.hashCode();
 				System.out.println("Conexão recebida do cliente " + conexao.getInetAddress());
-				ConexaoClienteServidor c = new ConexaoClienteServidor(conexao){
-
-					@Override
-					public void receber(Object o) {
-						mapeiaAcoes(o);
-					}
-					
-				};
+				ConexaoClienteServidor c = new ConexaoClienteServidor(conexao, this);
 				
 				if(jogoEmAndamento)
 					c.getEscreverObjetos().writeObject(new Mensagem("Jogo indisponivel, volte mais tarde"));
 				else{
 					conexoesAbertas.add(c);
+					c.getEscreverObjetos().writeObject(new Mensagem("Aguardando novos jogadores"));
 					if(!jogadorConectado){
 						jogadorConectado = true;
-						timer.schedule(new TimerTask() {
+						Timer t = new Timer();
+						t.schedule(new TimerTask() {
 							
 							@Override
 							public void run() {
-								Servidor.this.iniciaPartida();
+								Servidor.this.iniciaContagem();
 							}
 						}, 10000);
 					}
@@ -69,6 +66,22 @@ public class Servidor extends Thread{
 		
 	}	
 	private void mapeiaAcoes(Object o){
+		if(o instanceof List){
+			System.out.println("Tentativa de bingo recebida");
+			List<Integer> numerosCliente = (List)o;
+			if(numerosCliente.size() == 24 && this.numerosSorteados.containsAll(numerosCliente)){
+				try{
+					timerSorteios.cancel();
+				}catch(Exception e){}
+				this.writeToAll(new Mensagem("Jogador ganhou"));
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						iniciaPartida();
+					}
+				}, 10000);
+			}
+		}
 	}
 	
 	
@@ -87,34 +100,27 @@ public class Servidor extends Thread{
 	}
 	
 	private void iniciaPartida(){
-		System.out.println("Iniciando Jogo");
+		this.writeToAll(new Mensagem("O servidor iniciou a partida"));
 		this.jogoEmAndamento = true;
-		Iterator conexoes = conexoesAbertas.iterator();
-		while(conexoes.hasNext()){
-			ConexaoClienteServidor c = (ConexaoClienteServidor)conexoes.next();
-			try {
-				c.getEscreverObjetos().writeObject(Bingo.geraCartela());
-				c.getEscreverObjetos().flush();
-			} catch (IOException e) {
-				System.out.println("Cliente perdeu conexao, desconectando");
-				conexoes.remove();
-			}
-		}
+		this.numerosSorteados.clear();
 		
 		List<Integer> numerosSorteados = new ArrayList<Integer>();
 		
-		for(int i = 1; i < 62; i++){
+		for(int i = 1; i < 30; i++){
 			numerosSorteados.add(i);
 		}
 		
 		Collections.shuffle(numerosSorteados);
-		
-		timer.scheduleAtFixedRate(new TimerTask() {
+		this.writeToAll(new Mensagem("O servidor comecara a sortear numeros"));
+		timerSorteios = new Timer();
+		timerSorteios.scheduleAtFixedRate(new TimerTask() {
 			
 			@Override
 			public void run() {
 				if(!numerosSorteados.isEmpty()){
 					Servidor.this.writeToAll(new NumeroSorteado(numerosSorteados.get(0)));
+					Servidor.this.numerosSorteados.add(new Integer(numerosSorteados.get(0)));
+					System.out.println("Servidor sorteou o numero " + numerosSorteados.get(0));
 					numerosSorteados.remove(0);
 				}else{
 					Servidor.this.writeToAll(new Mensagem("Fim do jogo - Nao ha ganhador"));
@@ -126,11 +132,49 @@ public class Servidor extends Thread{
 							iniciaPartida();
 							
 						}
-					}, 10000);;
+					}, 5000);;
 					this.cancel();
 				}
 				
 			}
-		}, 1000, 1000);
+		}, 5000, 5000);
+	}
+
+	@Override
+	public void receber(Object o) {
+		mapeiaAcoes(o);
+	}
+	
+	public void iniciaContagem(){
+		Timer t = new Timer();
+		t.scheduleAtFixedRate(new TimerTask() {
+			int contagem = 5;
+			boolean sorteio = false;
+			@Override
+			public void run() {
+				if(contagem >=0){
+					if(!sorteio){
+						sorteio = true;
+						Iterator conexoes = conexoesAbertas.iterator();
+						while(conexoes.hasNext()){
+							ConexaoClienteServidor c = (ConexaoClienteServidor)conexoes.next();
+							try {
+								c.getEscreverObjetos().writeObject(Bingo.geraCartela());
+								c.getEscreverObjetos().flush();
+							} catch (IOException e) {
+								System.out.println("Cliente perdeu conexao, desconectando");
+								conexoes.remove();
+							}
+						}
+					}
+					Servidor.this.writeToAll(new Mensagem("O jogo comecara em " + contagem + " segundos "));
+					contagem--;
+				}else{
+					Servidor.this.iniciaPartida();
+					this.cancel();
+				}
+				
+			}
+		}, 0, 1000);
 	}
 }

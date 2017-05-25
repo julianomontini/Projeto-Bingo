@@ -1,12 +1,14 @@
 package com.telas;
 
+import java.net.Socket;
 import java.util.List;
 
+import com.common.ConexaoClienteServidor;
 import com.common.Receber;
 import com.database.Conexao;
 import com.database.DAOS.UsuariosDAO;
 import com.database.DBOS.UsuarioBO;
-import com.jogo.Jogo;
+import com.jogo.objetosConexao.Cartela;
 import com.jogo.objetosConexao.Mensagem;
 
 import javafx.application.Platform;
@@ -24,8 +26,10 @@ public class TelaLogin implements Receber{
 	
 	private Scene cena;
 	private Label mensagens;
-	
+	private ConexaoClienteServidor conexao;
+	private Stage primaryStage;
 	public TelaLogin(Stage primaryStage){
+		this.primaryStage = primaryStage;
 		this.cena = setup(primaryStage);
 	}
 	
@@ -81,12 +85,12 @@ public class TelaLogin implements Receber{
 					//Se o tamanho da lista for 0 significa que a query não retornou resultados
 					if (usuarios.size() == 0)
 						TelaLogin.this.mensagens.setText("Esse Usuario Nao Existe");
-					
-					new Jogo(usuarios.get(0).getEmail(), primaryStage, TelaLogin.this);
-					
-					TelaLogin.this.mensagens.setText("Jogo comecara em breve, aguarde");
+					else{
+						TelaLogin.this.conexao = new ConexaoClienteServidor(new Socket("localhost", 4200), TelaLogin.this);
+					}
 
 				} catch (Exception e) {
+					TelaLogin.this.mensagens.setText("Não foi possivel iniciar uma conexão com o servidor");
 					e.printStackTrace();
 				}
 
@@ -134,6 +138,18 @@ public class TelaLogin implements Receber{
 					TelaLogin.this.mensagens.setText("Mensagem: " + ((Mensagem)o).getTexto());
 				}
 				
+			});
+		}
+		
+		if(o instanceof Cartela){
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					TelaJogo telaJogo = new TelaJogo(TelaLogin.this.primaryStage,(Cartela)o, TelaLogin.this.conexao);
+					TelaLogin.this.conexao.setReceber(telaJogo);
+					TelaLogin.this.primaryStage.setScene(telaJogo.getTela());
+					TelaLogin.this.primaryStage.show();
+				}
 			});
 		}
 		

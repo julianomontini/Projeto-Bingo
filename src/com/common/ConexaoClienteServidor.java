@@ -6,18 +6,23 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public abstract class ConexaoClienteServidor implements Receber{
+public class ConexaoClienteServidor{
 
 	private Socket conexao;
 	private ObjectOutputStream escreverObjetos;
+	private Listener listener;
 	
-	public ConexaoClienteServidor(Socket conexao) throws Exception{
-		new Listener(conexao.getInputStream(), this);
+	public ConexaoClienteServidor(Socket conexao, Receber receber) throws Exception{
+		this.listener = new Listener(conexao.getInputStream(), receber);
 		this.escreverObjetos = new ObjectOutputStream(conexao.getOutputStream());	
 	}
 
 	public ObjectOutputStream getEscreverObjetos() {
 		return escreverObjetos;
+	}
+	
+	public void setReceber(Receber r){
+		this.listener.setReceber(r);
 	}
 	
 }

@@ -13,7 +13,7 @@ public class Bingo {
 		Integer[] retorno = new Integer[24];
 		
 		while(numerosSorteados.size() <= 24){
-			int numero = ((int)(Math.random()*60))+1;
+			int numero = ((int)(Math.random()*30))+1;
 			if(!numerosSorteados.contains(numero)){
 				numerosSorteados.add(numero);
 			}

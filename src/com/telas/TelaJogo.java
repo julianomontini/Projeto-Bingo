@@ -1,11 +1,15 @@
 package com.telas;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.common.ConexaoClienteServidor;
+import com.common.Receber;
 import com.jogo.Bingo;
 import com.jogo.objetosConexao.Cartela;
+import com.jogo.objetosConexao.Mensagem;
+import com.jogo.objetosConexao.NumeroSorteado;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -19,14 +23,14 @@ import javafx.stage.Stage;
 
 
 
-public class TelaPrincipal{
+public class TelaJogo implements Receber{
 	
 	private List<Integer> numerosEscolhidos;
 	private Scene tela;
 	private Stage primaryStage;
 	private ConexaoClienteServidor conexao;
 	private Label mensagens;
-	public TelaPrincipal(Stage primaryStage, Cartela c, ConexaoClienteServidor conexao){
+	public TelaJogo(Stage primaryStage, Cartela c, ConexaoClienteServidor conexao){
 		this.numerosEscolhidos = new ArrayList<Integer>();
 		this.conexao = conexao;
 		this.tela = getTelaPrincipal(c);
@@ -65,7 +69,12 @@ public class TelaPrincipal{
 
 						@Override
 						public void handle(Event event) {
-							
+							try {
+								System.out.println("Cliente tentou bingo");
+								conexao.getEscreverObjetos().writeObject(TelaJogo.this.numerosEscolhidos);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					});
 				}else{
@@ -77,12 +86,12 @@ public class TelaPrincipal{
 						@Override
 						public void handle(Event event) {
 							Integer id = Integer.valueOf(b.getId());
-							if(TelaPrincipal.this.numerosEscolhidos.contains(id)){
+							if(TelaJogo.this.numerosEscolhidos.contains(id)){
 								b.setStyle("-fx-background-color: #E2E2E2");
-								TelaPrincipal.this.numerosEscolhidos.remove(id);
+								TelaJogo.this.numerosEscolhidos.remove(id);
 							}else{
 								b.setStyle("-fx-background-color: #7F7F7F");
-								TelaPrincipal.this.numerosEscolhidos.add(id);
+								TelaJogo.this.numerosEscolhidos.add(id);
 							}
 						}
 					});
@@ -95,7 +104,6 @@ public class TelaPrincipal{
 		root.setCenter(tabuleiro);
 		
 		Label mensagens = new Label();
-		mensagens.setText("Alguma mensagem aqui");
 		mensagens.setStyle("-fx-font-size: 25px");
 		this.mensagens = mensagens;
 		tabuleiro.addRow(6, mensagens);
@@ -152,11 +160,26 @@ public class TelaPrincipal{
 		Platform.runLater(new Runnable(){
 			@Override
 			public void run() {
-				TelaPrincipal.this.mensagens.setText(texto);
+				TelaJogo.this.mensagens.setText(texto);
 				
 			}
 			
 		});
+	}
+
+	@Override
+	public void receber(Object o) {
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				if(o instanceof Mensagem)
+					TelaJogo.this.mensagens.setText("Mensagem: " + ((Mensagem)o).getTexto());
+				if(o instanceof NumeroSorteado)
+					TelaJogo.this.mensagens.setText("Numero sorteado: " + ((NumeroSorteado)o).getNumero());
+			}
+		});
+		
 	}
 	
 }
