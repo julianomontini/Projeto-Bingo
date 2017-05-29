@@ -6,10 +6,12 @@ import java.util.List;
 
 import com.common.ConexaoClienteServidor;
 import com.common.Receber;
+import com.database.DBOS.UsuarioBO;
 import com.jogo.Bingo;
 import com.jogo.objetosConexao.Cartela;
 import com.jogo.objetosConexao.Mensagem;
 import com.jogo.objetosConexao.NumeroSorteado;
+import com.jogo.objetosConexao.TentativaBingo;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -71,7 +73,9 @@ public class TelaJogo implements Receber{
 						public void handle(Event event) {
 							try {
 								System.out.println("Cliente tentou bingo");
-								conexao.getEscreverObjetos().writeObject(TelaJogo.this.numerosEscolhidos);
+								conexao.getEscreverObjetos().writeObject(new TentativaBingo(TelaJogo.this.conexao.getJogador(), TelaJogo.this.numerosEscolhidos));
+								for(Integer i : TelaJogo.this.numerosEscolhidos)
+									System.out.print(i);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
@@ -177,6 +181,13 @@ public class TelaJogo implements Receber{
 					TelaJogo.this.mensagens.setText("Mensagem: " + ((Mensagem)o).getTexto());
 				if(o instanceof NumeroSorteado)
 					TelaJogo.this.mensagens.setText("Numero sorteado: " + ((NumeroSorteado)o).getNumero());
+				if(o instanceof Cartela){
+					Cartela recebida = (Cartela)o;
+					TelaJogo t = new TelaJogo(TelaJogo.this.primaryStage, recebida, TelaJogo.this.conexao);
+					TelaJogo.this.conexao.setReceber(t);
+					TelaJogo.this.primaryStage.setScene(t.getTela());
+					TelaJogo.this.primaryStage.show();
+				}
 			}
 		});
 		

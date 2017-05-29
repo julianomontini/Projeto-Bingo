@@ -3,7 +3,9 @@ package com.servidor;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -12,9 +14,14 @@ import java.util.TimerTask;
 
 import com.common.ConexaoClienteServidor;
 import com.common.Receber;
+import com.database.Conexao;
+import com.database.DAOS.JogadasDAO;
+import com.database.DAOS.UsuariosDAO;
+import com.database.DBOS.JogadaBO;
 import com.jogo.Bingo;
 import com.jogo.objetosConexao.Mensagem;
 import com.jogo.objetosConexao.NumeroSorteado;
+import com.jogo.objetosConexao.TentativaBingo;
 
 public class Servidor extends Thread implements Receber{
 
@@ -66,24 +73,33 @@ public class Servidor extends Thread implements Receber{
 		
 	}	
 	private void mapeiaAcoes(Object o){
-		if(o instanceof List){
-			System.out.println("Tentativa de bingo recebida");
-			List<Integer> numerosCliente = (List)o;
-			if(numerosCliente.size() == 24 && this.numerosSorteados.containsAll(numerosCliente)){
-				try{
-					timerSorteios.cancel();
-				}catch(Exception e){}
-				this.writeToAll(new Mensagem("Jogador ganhou"));
-				new Timer().schedule(new TimerTask() {
-					@Override
-					public void run() {
-						iniciaPartida();
-					}
-				}, 10000);
-			}
+		if(o instanceof TentativaBingo){
+			tentativaBingo(o);
 		}
 	}
 	
+	private void tentativaBingo(Object o){
+		System.out.println("Tentativa de bingo recebida");
+		TentativaBingo tentativa = (TentativaBingo)o;
+		if(tentativa.getNumerosJogados().size() == 24 && this.numerosSorteados.containsAll(tentativa.getNumerosJogados())){
+			try{
+				timerSorteios.cancel();
+			}catch(Exception e){}
+			this.writeToAll(new Mensagem("Jogador ganhou"));
+			try {
+				JogadasDAO mgrJogadas = new JogadasDAO(Conexao.getConnection());
+				mgrJogadas.create(new JogadaBO(null, tentativa.getUsuario().getId(), Calendar.getInstance().getTime()));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					iniciaContagem();
+				}
+			}, 10000);
+		}
+	}
 	
 	private void writeToAll(Object o){
 		Iterator i = this.conexoesAbertas.iterator();

@@ -6,8 +6,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ConexaoClienteServidor{
+import com.database.DBOS.UsuarioBO;
 
+public class ConexaoClienteServidor{
+	
+	private UsuarioBO jogador;
 	private Socket conexao;
 	private ObjectOutputStream escreverObjetos;
 	private Listener listener;
@@ -23,6 +26,14 @@ public class ConexaoClienteServidor{
 	
 	public void setReceber(Receber r){
 		this.listener.setReceber(r);
+	}
+
+	public UsuarioBO getJogador() {
+		return jogador;
+	}
+
+	public void setJogador(UsuarioBO jogador) {
+		this.jogador = jogador;
 	}
 	
 }

@@ -87,6 +87,7 @@ public class TelaLogin implements Receber{
 						TelaLogin.this.mensagens.setText("Esse Usuario Nao Existe");
 					else{
 						TelaLogin.this.conexao = new ConexaoClienteServidor(new Socket("localhost", 4200), TelaLogin.this);
+						TelaLogin.this.conexao.setJogador(usuarios.get(0));
 					}
 
 				} catch (Exception e) {

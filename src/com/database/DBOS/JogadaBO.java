@@ -1,9 +1,10 @@
 package com.database.DBOS;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-public class JogadaBO extends GenericoBO{
+public class JogadaBO extends GenericoBO implements Serializable{
 
 	private Integer idUsuario;
 	private Date horario;
@@ -29,7 +30,7 @@ public class JogadaBO extends GenericoBO{
 	public String horarioSQL(){
 		Calendar c = Calendar.getInstance();
 		c.setTime(this.getHorario());
-		return c.get(Calendar.YEAR) + "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.DAY_OF_MONTH);
+		return c.get(Calendar.YEAR) + "-" + c.get(Calendar.MONTH)+1 + "-" + c.get(Calendar.DAY_OF_MONTH);
 	}
 	
 }

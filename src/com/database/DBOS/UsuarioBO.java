@@ -1,6 +1,8 @@
 package com.database.DBOS;
 
-public class UsuarioBO extends GenericoBO{
+import java.io.Serializable;
+
+public class UsuarioBO extends GenericoBO implements Serializable{
 
 	private String nome;
 	private String email;

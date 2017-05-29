@@ -1,6 +1,8 @@
 package com.database.DBOS;
 
-public class GenericoBO{
+import java.io.Serializable;
+
+public class GenericoBO implements Serializable{
 	private Integer id;
 	
 	public GenericoBO(Integer id){

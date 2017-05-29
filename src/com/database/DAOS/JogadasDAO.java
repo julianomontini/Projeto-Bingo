@@ -18,26 +18,26 @@ public class JogadasDAO implements CRUD<JogadaBO>{
 
 	@Override
 	public void create(JogadaBO jogada) throws SQLException {
-		String query = "INSERT INTO JOGADAS(ID_USUARIO, HORARIO) VALUES("+ jogada.getIdUsuario()+",'"+jogada.horarioSQL()+"')";
+		String query = "INSERT INTO JOGADA(ID_USUARIO, HORARIO) VALUES("+ jogada.getIdUsuario()+",'"+jogada.horarioSQL()+"')";
 		conn.createStatement().executeUpdate(query);
 	}
 
 	@Override
 	public void update(JogadaBO jogada) throws SQLException {
-		String query = "UPDATE JOGADAS SET ID_USUARIO = '" + jogada.getIdUsuario()+ "' , HORARIO = '"+jogada.horarioSQL()+ "' WHERE ID = " + jogada.getId();
+		String query = "UPDATE JOGADA SET ID_USUARIO = '" + jogada.getIdUsuario()+ "' , HORARIO = '"+jogada.horarioSQL()+ "' WHERE ID = " + jogada.getId();
 		conn.createStatement().executeUpdate(query);
 	}
 
 	@Override
 	public void delete(JogadaBO jogada) throws SQLException {
-		String query = "DELETE FROM JOGADAS WHERE ID = " + jogada.getId();
+		String query = "DELETE FROM JOGADA WHERE ID = " + jogada.getId();
 		conn.createStatement().executeUpdate(query);
 	}
 
 	@Override
 	public JogadaBO select(Integer id) throws SQLException {
 		JogadaBO retorno = null;
-		String query = "SELECT ID, ID_USUARIO, HORARIO FROM JOGADAS WHERE ID = " + id;
+		String query = "SELECT ID, ID_USUARIO, HORARIO FROM JOGADA WHERE ID = " + id;
 		
 		ResultSet resultado = conn.createStatement().executeQuery(query);
 		
@@ -50,7 +50,7 @@ public class JogadasDAO implements CRUD<JogadaBO>{
 	@Override
 	public List<JogadaBO> select() throws SQLException {
 		List<JogadaBO> retorno = new ArrayList<JogadaBO>();
-		String query = "SELECT ID, ID_USUARIO, HORARIO FROM JOGADAS";
+		String query = "SELECT ID, ID_USUARIO, HORARIO FROM JOGADA";
 		
 		ResultSet resultado = conn.createStatement().executeQuery(query);
 		
@@ -63,7 +63,7 @@ public class JogadasDAO implements CRUD<JogadaBO>{
 	@Override
 	public List<JogadaBO> select(String[] clausula, String[] valor) throws SQLException {
 		List<JogadaBO> retorno = new ArrayList<JogadaBO>();
-		String query = "SELECT ID, ID_USUARIO, HORARIO FROM JOGADAS";
+		String query = "SELECT ID, ID_USUARIO, HORARIO FROM JOGADA";
 		
 		
 		if(clausula.length > 0){
