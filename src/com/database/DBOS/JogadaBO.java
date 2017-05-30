@@ -30,7 +30,7 @@ public class JogadaBO extends GenericoBO implements Serializable{
 	public String horarioSQL(){
 		Calendar c = Calendar.getInstance();
 		c.setTime(this.getHorario());
-		return c.get(Calendar.YEAR) + "-" + c.get(Calendar.MONTH)+1 + "-" + c.get(Calendar.DAY_OF_MONTH);
+		return c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH)+1) + "-" + c.get(Calendar.DAY_OF_MONTH);
 	}
 	
 }

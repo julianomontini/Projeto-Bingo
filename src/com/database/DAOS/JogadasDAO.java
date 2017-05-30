@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import com.common.VitoriasJogador;
 import com.database.DBOS.JogadaBO;
 
 public class JogadasDAO implements CRUD<JogadaBO>{
@@ -85,6 +88,28 @@ public class JogadasDAO implements CRUD<JogadaBO>{
 			retorno.add(new JogadaBO(resultado.getInt(1),resultado.getInt(2), resultado.getDate(3)));
 		
 		return retorno;
+	}
+	
+	public List<VitoriasJogador> getVitoriasJogador() throws SQLException{
+		List<VitoriasJogador> vitorias = new ArrayList<VitoriasJogador>();
+		
+		ResultSet resultado = conn.createStatement().executeQuery("SELECT * FROM VITORIAS_USUARIO");
+		
+		while(resultado.next())
+			vitorias.add(new VitoriasJogador(resultado.getInt(1), resultado.getString(2)));
+		
+		Collections.sort(vitorias, new Comparator<VitoriasJogador>(){
+			@Override
+			public int compare(VitoriasJogador v1, VitoriasJogador v2) {
+				if(v1.getVitorias() > v2.getVitorias())
+					return -1;
+				if(v1.getVitorias() < v2.getVitorias())
+					return 1;
+				
+				return 0;
+			}});
+		
+		return vitorias;
 	}
 
 }

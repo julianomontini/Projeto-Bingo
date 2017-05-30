@@ -1,11 +1,14 @@
 package com.telas;
 
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.common.ConexaoClienteServidor;
 import com.common.Receber;
+import com.common.VitoriasJogador;
 import com.database.Conexao;
+import com.database.DAOS.JogadasDAO;
 import com.database.DAOS.UsuariosDAO;
 import com.database.DBOS.UsuarioBO;
 import com.jogo.objetosConexao.Cartela;
@@ -119,6 +122,20 @@ public class TelaLogin implements Receber{
 		root.add(botaoCadastro, 0, 3);
 		root.add(mensagens, 1, 4);
 		this.mensagens = mensagens;
+		
+		try {
+			List<VitoriasJogador> vitorias = new JogadasDAO(Conexao.getConnection()).getVitoriasJogador();
+			Label placar = new Label();
+			String texto = "Jogador\t\t\tPontuacao\n";
+			for(VitoriasJogador vitoria : vitorias){
+				texto += vitoria.getJogador() + "\t\t\t" + vitoria.getVitorias() + "\n";
+			}
+			placar.setText(texto);
+			root.add(placar, 1, 5);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		//retorna cena com todos os elementos criados
 		Scene c = new Scene(root, 400, 250);
