@@ -81,10 +81,22 @@ public class Servidor extends Thread implements Receber{
 	private void tentativaBingo(Object o){
 		System.out.println("Tentativa de bingo recebida");
 		TentativaBingo tentativa = (TentativaBingo)o;
+		
+		System.out.print("Numeros do servidor: ");
+		for(Integer i : this.numerosSorteados)
+			System.out.print(i + " ");
+		System.out.print("\nNumeros do cliente: ");
+		for(Integer i : tentativa.getNumerosJogados())
+			System.out.println(i + " ");
+		System.out.println("Contem todos? " + this.numerosSorteados.containsAll(tentativa.getNumerosJogados()));
+		System.out.println("Tamanho cliente: " + tentativa.getNumerosJogados().size());
+		
 		if(tentativa.getNumerosJogados().size() == 24 && this.numerosSorteados.containsAll(tentativa.getNumerosJogados())){
 			try{
 				timerSorteios.cancel();
-			}catch(Exception e){}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			this.writeToAll(new Mensagem("Jogador ganhou"));
 			try {
 				JogadasDAO mgrJogadas = new JogadasDAO(Conexao.getConnection());
@@ -136,7 +148,9 @@ public class Servidor extends Thread implements Receber{
 				if(!numerosSorteados.isEmpty()){
 					Servidor.this.writeToAll(new NumeroSorteado(numerosSorteados.get(0)));
 					Servidor.this.numerosSorteados.add(new Integer(numerosSorteados.get(0)));
-					System.out.println("Servidor sorteou o numero " + numerosSorteados.get(0));
+					System.out.print("\nNumeros Já sorteados: ");
+					for(Integer numero : Servidor.this.numerosSorteados)
+						System.out.print(numero + " ");
 					numerosSorteados.remove(0);
 				}else{
 					Servidor.this.writeToAll(new Mensagem("Fim do jogo - Nao ha ganhador"));
@@ -145,7 +159,7 @@ public class Servidor extends Thread implements Receber{
 						
 						@Override
 						public void run() {
-							iniciaPartida();
+							iniciaContagem();
 							
 						}
 					}, 5000);;

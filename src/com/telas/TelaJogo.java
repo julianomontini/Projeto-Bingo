@@ -72,10 +72,13 @@ public class TelaJogo implements Receber{
 						@Override
 						public void handle(Event event) {
 							try {
-								System.out.println("Cliente tentou bingo");
-								conexao.getEscreverObjetos().writeObject(new TentativaBingo(TelaJogo.this.conexao.getJogador(), TelaJogo.this.numerosEscolhidos));
+								System.out.println("Cliente tentou bingo\n");
+								TentativaBingo tentativa = new TentativaBingo(TelaJogo.this.conexao.getJogador(), TelaJogo.this.numerosEscolhidos);
+								conexao.getEscreverObjetos().reset();
+								conexao.getEscreverObjetos().writeObject(tentativa);
+								System.out.println("Numeros da tentativa: ");
 								for(Integer i : TelaJogo.this.numerosEscolhidos)
-									System.out.print(i);
+									System.out.print(i + " ");
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
