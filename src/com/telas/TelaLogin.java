@@ -25,6 +25,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * Tela de login
+ * @author Juliano
+ *
+ */
 public class TelaLogin implements Receber{
 	
 	private Scene cena;

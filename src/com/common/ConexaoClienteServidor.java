@@ -8,6 +8,11 @@ import java.net.Socket;
 
 import com.database.DBOS.UsuarioBO;
 
+/**
+ * 
+ * @author Juliano
+ *	Classe para estabelecer a conexao entre o cliente e o servidor
+ */
 public class ConexaoClienteServidor{
 	
 	private UsuarioBO jogador;
@@ -15,23 +20,45 @@ public class ConexaoClienteServidor{
 	private ObjectOutputStream escreverObjetos;
 	private Listener listener;
 	
+	/**
+	 * 
+	 * @param conexao Socket da conexao
+	 * @param receber Objeto que executará ações
+	 * @throws Exception Caso falhe em crirar o ObjectOutputStream
+	 */
 	public ConexaoClienteServidor(Socket conexao, Receber receber) throws Exception{
 		this.listener = new Listener(conexao.getInputStream(), receber);
 		this.escreverObjetos = new ObjectOutputStream(conexao.getOutputStream());	
 	}
 
+	/**
+	 * 
+	 * @return O ObjectOutputStream
+	 */
 	public ObjectOutputStream getEscreverObjetos() {
 		return escreverObjetos;
 	}
 	
+	/**
+	 * 
+	 * @param Novo objeto que executará açoes
+	 */
 	public void setReceber(Receber r){
 		this.listener.setReceber(r);
 	}
 
+	/**
+	 * 
+	 * @return Jogador que abriu essa conexao
+	 */
 	public UsuarioBO getJogador() {
 		return jogador;
 	}
 
+	/**
+	 * 
+	 * @param jogador Novo jogador da conexao
+	 */
 	public void setJogador(UsuarioBO jogador) {
 		this.jogador = jogador;
 	}

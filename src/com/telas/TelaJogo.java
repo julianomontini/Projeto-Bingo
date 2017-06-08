@@ -24,7 +24,11 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 
-
+/**
+ * Tela do jogo de bingo
+ * @author Juliano
+ *
+ */
 public class TelaJogo implements Receber{
 	
 	private List<Integer> numerosEscolhidos;
@@ -41,7 +45,7 @@ public class TelaJogo implements Receber{
 		primaryStage.show();
 	}
 
-	public Scene getTelaPrincipal(Cartela c){
+	private Scene getTelaPrincipal(Cartela c){
 		
 		BorderPane root = new BorderPane();
 		GridPane tabuleiro = new GridPane();

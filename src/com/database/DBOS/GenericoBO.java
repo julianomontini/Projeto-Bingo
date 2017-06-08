@@ -2,6 +2,11 @@ package com.database.DBOS;
 
 import java.io.Serializable;
 
+/**
+ * Representacao de um objeto generico do banco
+ * @author Juliano
+ *
+ */
 public class GenericoBO implements Serializable{
 	private Integer id;
 	
@@ -9,10 +14,18 @@ public class GenericoBO implements Serializable{
 		this.id = id;
 	}
 
+	/**
+	 * getter para id
+	 * @return id
+	 */
 	public Integer getId() {
 		return id;
 	}
 
+	/**
+	 * setter para id
+	 * @param id
+	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}

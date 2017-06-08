@@ -8,6 +8,11 @@ import java.util.List;
 
 import com.database.DBOS.UsuarioBO;
 
+/**
+ * Realiza operacoes no banco para a classe UsuarioBO
+ * @author Juliano
+ *
+ */
 public class UsuariosDAO implements CRUD<UsuarioBO>{
 
 	private final Connection conn;

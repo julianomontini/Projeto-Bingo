@@ -5,12 +5,25 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Classe para se conectar com o banco de dados
+ * @author Juliano
+ *
+ */
 public class Conexao {
 	
 	private Conexao(){}
 
 	private static Connection conexao = null;
 	
+	/**
+	 * Retorna uma nova conexao com o banco de dados, caso uma 
+	 * conexao ja tenha sido aberta,retorna ela mesma, sendo assim
+	 * so existe uma conexao ativa por vez ( singleton pattern )
+	 * @return Conexao com o banco de dados.
+	 * 
+	 * @throws SQLException
+	 */
 	public static Connection getConnection() throws SQLException{
 		
 		if(conexao != null)

@@ -23,14 +23,19 @@ import com.jogo.objetosConexao.Mensagem;
 import com.jogo.objetosConexao.NumeroSorteado;
 import com.jogo.objetosConexao.TentativaBingo;
 
+/**
+ * Servidor que fica recebendo novas conexoes e que controla o fluxo do jogo
+ * @author Juliano
+ *
+ */
 public class Servidor extends Thread implements Receber{
 
-	int porta;
-	boolean jogoEmAndamento = false;
-	boolean jogadorConectado = false;
-	List<ConexaoClienteServidor> conexoesAbertas = new ArrayList<ConexaoClienteServidor>();
-	List<Integer> numerosSorteados = new ArrayList<Integer>();
-	Timer timerSorteios;
+	private int porta;
+	private boolean jogoEmAndamento = false;
+	private boolean jogadorConectado = false;
+	private List<ConexaoClienteServidor> conexoesAbertas = new ArrayList<ConexaoClienteServidor>();
+	private List<Integer> numerosSorteados = new ArrayList<Integer>();
+	private Timer timerSorteios;
 	
 	public Servidor(int porta){
 		this.porta = porta;

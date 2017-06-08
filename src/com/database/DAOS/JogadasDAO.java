@@ -11,6 +11,11 @@ import java.util.List;
 import com.common.VitoriasJogador;
 import com.database.DBOS.JogadaBO;
 
+/**
+ * Efetua operacoes no banco relacionadas a classe JogadasBO
+ * @author Juliano
+ *
+ */
 public class JogadasDAO implements CRUD<JogadaBO>{
 	
 	private Connection conn;

@@ -15,6 +15,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+/**
+ * Tela de cadastro
+ * @author Juliano
+ *
+ */
 public class TelaCadastro {
 
 	private TelaCadastro(){}
