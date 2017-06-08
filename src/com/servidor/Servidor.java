@@ -139,7 +139,7 @@ public class Servidor extends Thread implements Receber{
 		
 		List<Integer> numerosSorteados = new ArrayList<Integer>();
 		
-		for(int i = 1; i < 30; i++){
+		for(int i = 1; i <= 60; i++){
 			numerosSorteados.add(i);
 		}
 		
