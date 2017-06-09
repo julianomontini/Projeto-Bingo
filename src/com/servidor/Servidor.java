@@ -102,7 +102,7 @@ public class Servidor extends Thread implements Receber{
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			this.writeToAll(new Mensagem("Jogador ganhou"));
+			this.writeToAll(new Mensagem(tentativa.getUsuario().getNome() + " ganhou"));
 			try {
 				JogadasDAO mgrJogadas = new JogadasDAO(Conexao.getConnection());
 				mgrJogadas.create(new JogadaBO(null, tentativa.getUsuario().getId(), Calendar.getInstance().getTime()));
@@ -139,7 +139,7 @@ public class Servidor extends Thread implements Receber{
 		
 		List<Integer> numerosSorteados = new ArrayList<Integer>();
 		
-		for(int i = 1; i <= 60; i++){
+		for(int i = 1; i <= 75; i++){
 			numerosSorteados.add(i);
 		}
 		
